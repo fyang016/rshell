@@ -1,5 +1,5 @@
 # rshell
-This project is created by Marco Rubio (mrubi005) and Franklin Yang (fyang016)
+This project is created by Marco Rubio (mrubi005) and Franklin Yang (fyang016) for CS100.
 
 ## What is rshell?
 Hello!
