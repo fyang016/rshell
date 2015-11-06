@@ -23,50 +23,6 @@ void Terminal::test(){
 	cout << "Hello There" << endl;
 }
 
-//Run individual commands returns int of results
-int Terminal::exe(string command){
-	
-	// char * argss[splice.size() + 1];
-	// argss[splice.size()] = NULL;
-	// for(unsigned int i = 0; i < splice.size(); i++){
-	// 	char * tmp = new char[(*splice[i]).length()+1];
-	// 	strcpy(tmp, (*splice[i]).c_str());
-	// 	argss[i] = tmp;
-	// }
-	
-	pid_t c_pid, pid;
-	int status;
-	c_pid = fork();
-	if(c_pid < 0){
-		perror("ERROR: Fork Failed");
-		exit(1);
-	}
-	else if(c_pid==0){
-		//cout << "EXE Child" << endl;
-	//	int result = execvp(argss[0], argss);
-		//cout << "EXE Result: " << result << endl;
-		//cout << "EXE Executed task" << endl;
-		perror("execve failed");
-		exit(1);
-	}
-	else if (c_pid > 0){
-		//cout << "EXE parent" << endl;
-		if((pid = wait(&status)) < 0){
-			//cout << "EXE Error" << endl;
-			perror("wait");
-			exit(1);
-		}
-		//cout << "EXE pid: " << pid << endl;
-		//cout << "EXE status: " << status << endl;
-		return status;
-	}
-	// for(int i = 0; i < (splice.size() + 1); i++){
-	// 	delete argss[i];
-	// }
-	return 1;
-
-}
-
 //Convert given string to its equivalent char *
 char * toChar(string  str){
 	return const_cast<char*>((str).c_str());
@@ -80,11 +36,67 @@ string Terminal::throwAwayComments(std::string str){
 	
 }
 
+//Run individual commands returns int of results
+int Terminal::exe(string command){
+	
+	//Separate command by spaces and save to a vector
+	char_separator<char> space(" ");
+	tokenizer<char_separator<char> > tok(command, space);
+	int size = 0;
+	vector<string> arguments;
+	
+	for(tokenizer<char_separator<char> >::iterator beg=tok.begin(); beg!=tok.end();++beg){
+		size++;
+		arguments.push_back(*beg);
+		//cout << "Argument " << size << ": " << *beg << endl;
+	}
+	
+	//Convert vector to char * for the execvp function
+	char ** args;
+	args = new char*[size + 1]; //+1 to make space for null termination
+	args[size] = NULL; //Last item must be empty to indicate end of list
+	
+	for(int i = 0; i < size; i++){
+		args[i] = const_cast<char*>((arguments[i]).c_str()); //Converting string to Char
+	    //args[i] = toChar(arguments[i]);
+	}
+	
+	pid_t c_pid, pid;
+	int status;
+	c_pid = fork();
+	if(c_pid < 0){
+		perror("ERROR: Fork Failed");
+		exit(1);
+		return -1;
+	}
+	else if(c_pid==0){
+		execvp(args[0], args);
+		perror("execve failed");
+		delete args;
+		exit(1);
+	}
+	else if (c_pid > 0){
+		if((pid = wait(&status)) < 0){
+			perror("wait");
+			exit(1);
+		}
+		//cout << "EXE status: " << status << endl;
+		delete args;
+		return status;
+	}
+	
+	return 1;
+}
+
 //Run the terminal application
 void Terminal::run(){
 	int exit = 0;
 	while (!exit){
-		cout << this->prompt << " ";
+		char *loginName = getlogin();
+		char hostName[128];
+		gethostname(hostName, sizeof hostName);
+		
+		cout << loginName << '@' << hostName << this->prompt << " ";
 		
 		getline(cin, input);
 		
@@ -96,21 +108,32 @@ void Terminal::run(){
 		char_separator<char> separatorSemiColon(";");
 		tokenizer<char_separator<char> > tok(noComments, separatorSemiColon);
 		for(tokenizer<char_separator<char> >::iterator beg1=tok.begin(); beg1!=tok.end();++beg1){
-			cout << "Semi Colon-------------------------------- " << endl;;
+			
 			//Separate strings by || first do to presidance
-			char_separator<char> separatorAnd("||");
+			char_separator<char> separatorAnd("&&");
 			tokenizer<char_separator<char> > tok(*beg1, separatorAnd);
 			
+			int lastOperation = 0; //zero for OR one for AND
+			int result = 0;
 			for(tokenizer<char_separator<char> >::iterator beg2=tok.begin(); beg2!=tok.end();++beg2){
-				cout << "---------AND Operator---------------------" << endl;
+				
 				//Separate Strings by && and execute the commands
-				char_separator<char> separatorAnd("&&");
+				char_separator<char> separatorAnd("||");
 				tokenizer<char_separator<char> > tok(*beg2, separatorAnd);
 				
 				for(tokenizer<char_separator<char> >::iterator beg3=tok.begin(); beg3!=tok.end();++beg3){
-					cout << "OR Operator: " << *beg3 << endl;
-					this->exe(*beg3);
+					
+					//If the result of the exe function is zero it means
+					//that the function executed correctly 0 errors
+					if(lastOperation == 0 && result == 0){
+						result = (this->exe(*beg3) == 0);
+					}
+					else if(lastOperation == 1 && result == 1){
+						result = (this->exe(*beg3) == 0);
+					}
+					lastOperation = 0;
 				}
+				lastOperation = 1;
 			}
 	 	}
 	}	
