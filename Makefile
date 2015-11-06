@@ -1,12 +1,9 @@
-COMPILE_DEFAULT = g++ -Wall -Werror -ansi -pedantic
-TWO_CPP = rshell.cpp terminal.cpp
-
 all:
     rm -rf bin
     mkdir -p bin
-    $(COMPILE_DEFAULT) $(TWO_CPP)
+    g++ -Wall -Werror -ansi -pedantic ./src/rshell.cpp ./src/terminal.cpp -o ./bin/rshell
 
 rshell:
     rm -rf bin
     mkdir -p bin
-    $(COMPILE_DEFAULT) $(TWO_CPP)
+    g++ -Wall -Werror -ansi -pedantic ./src/rshell.cpp ./src/terminal.cpp -o ./bin/rshell
