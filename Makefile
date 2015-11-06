@@ -1,2 +1,12 @@
+COMPILE_DEFAULT = g++ -Wall -Werror -ansi -pedantic
+TWO_CPP = rshell.cpp terminal.cpp
+
 all:
-    g++ main.cpp -Wall -Werror -ansi -pedantic
+    rm -rf bin
+    mkdir -p bin
+    $(COMPILE_DEFAULT) $(TWO_CPP)
+
+rshell:
+    rm -rf bin
+    mkdir -p bin
+    $(COMPILE_DEFAULT) $(TWO_CPP)
