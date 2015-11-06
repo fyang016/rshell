@@ -1,2 +1,2 @@
-mainmake: main.cpp
+all:
     g++ main.cpp -Wall -Werror -ansi -pedantic
