@@ -1,0 +1,19 @@
+Script started on Fri 06 Nov 2015 10:01:17 PM PST
+[fyang016@hammer assn1]$ make
+rm -rf bin
+mkdir -p bin
+g++ -Wall -Werror -ansi -pedantic ./src/rshell.cpp ./src/terminal.cpp -o ./bin/rshell
+[fyang016@hammer assn1]$ bin/rshell
+fyang016@hammer.cs.ucr.edu$ date #date
+Fri Nov  6 22:01:50 PST 2015
+fyang016@hammer.cs.ucr.edu$ date && ls #date
+Fri Nov  6 22:02:00 PST 2015
+bin  commented_command.script  Makefile  src  tests
+fyang016@hammer.cs.ucr.edu$ #date
+fyang016@hammer.cs.ucr.edu$ # ls || date
+fyang016@hammer.cs.ucr.edu$ #exit
+fyang016@hammer.cs.ucr.edu$ exit
+[fyang016@hammer assn1]$ exit
+exit
+
+Script done on Fri 06 Nov 2015 10:02:19 PM PST
