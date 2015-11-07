@@ -14,6 +14,7 @@ class Terminal{
 		char * toChar(string *);
 		string throwAwayComments(std::string);
 		int exe(std::string);
+		int bugSearch(string);
 		void printValues();
 		Terminal();
 

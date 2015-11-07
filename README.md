@@ -28,5 +28,8 @@ WARNING!! Please keep in mind that the first two connectors have to be typed in 
 
 ### Known bugs
 Code will not throw an error with more than two of the '&' and the '|' characters in a row. (e.g. "&&&&&")
-MASSIVE bug that makes three glitched files after using g++
 
+### Important info
+The following command is not perfect:
+cat filename | perl -pe 's/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g' | col -b > new_filename
+It was provided by the instructor himself, but we compared the text side-by-side, and there are sometimes whole words concatenated. What we opted for is to copy and paste the text shown by the command "cat [filename]" instead. Not only is the information exactly the same, but also there will not be any extraneous characters.

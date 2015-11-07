@@ -16,6 +16,7 @@ using namespace boost;
 
 Terminal::Terminal(){
 	this->prompt = '$';
+	this->input = "";
 }
 
 //For testing purposes
@@ -28,12 +29,18 @@ char * toChar(string  str){
 	return const_cast<char*>((str).c_str());
 }
 
-//Throw aways comments
-string Terminal::throwAwayComments(std::string str){
-	char_separator<char> sep("#");
-	tokenizer<char_separator<char> > tok(str, sep);
- 	return *(tok.begin());
+//Throw aways comments by resizing the string
+string Terminal::throwAwayComments(std::string input){
+	// char_separator<char> sep("#");
+	// tokenizer<char_separator<char> > tok(str, sep);
 	
+	for (unsigned int i = 0; i < input.size(); ++i){
+		if (input.at(i) == '#'){
+			// resize to cut off before the '#' sign
+			input.resize(i);
+		}
+	}
+ 	return input;
 }
 
 //Run individual commands returns int of results
@@ -61,6 +68,11 @@ int Terminal::exe(string command){
 	    //args[i] = toChar(arguments[i]);
 	}
 	
+	//Check for the exit command
+	if(arguments[0] == "exit"){
+		exit(0);
+	}
+	
 	pid_t c_pid, pid;
 	int status;
 	c_pid = fork();
@@ -71,7 +83,7 @@ int Terminal::exe(string command){
 	}
 	else if(c_pid==0){
 		execvp(args[0], args);
-		perror("execve failed");
+		perror("execvp failed");
 		delete args;
 		exit(1);
 	}
@@ -88,27 +100,84 @@ int Terminal::exe(string command){
 	return 1;
 }
 
+// Concept: If there are '|' or '&' symbols that are not in pairs, call error
+int Terminal::bugSearch(string str){
+	int consecutiveAmpersand = 0;
+	int consecutiveOr = 0;
+	int most_consecutiveAmpersand = 0;
+	int most_consecutiveOr = 0;
+	
+	for(unsigned int i = 0; i < str.size(); i++){
+		
+		//Too many ampersand's
+		if(str[i] == '&'){
+			consecutiveAmpersand++;
+			if(consecutiveAmpersand > most_consecutiveAmpersand){
+				most_consecutiveAmpersand = consecutiveAmpersand;
+			}
+		}
+		else{
+			if(consecutiveAmpersand > most_consecutiveAmpersand){
+				most_consecutiveAmpersand = consecutiveAmpersand;
+			}
+			consecutiveAmpersand = 0;
+		}
+		
+		//Too many OR's
+		if(str[i] == '|'){
+			consecutiveOr++;
+			if(consecutiveOr > most_consecutiveOr){
+				most_consecutiveOr = consecutiveOr;
+			}
+		}
+		else{
+			if(consecutiveOr > most_consecutiveOr){
+				most_consecutiveOr = consecutiveOr;
+			}
+			consecutiveOr = 0;
+		}
+		
+		if(most_consecutiveOr > 2 || most_consecutiveAmpersand > 2){
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+
 //Run the terminal application
 void Terminal::run(){
 	int exit = 0;
+	
+	// Extra credit part: store the login name and host name to output later
+	char *loginName = getlogin();
+	char hostName[128];
+	gethostname(hostName, sizeof hostName);
+	
 	while (!exit){
-		char *loginName = getlogin();
-		char hostName[128];
-		gethostname(hostName, sizeof hostName);
 		
-		cout << loginName << '@' << hostName << this->prompt << " ";
+		input = ""; //Erase the input4
+		string noComments;
+		while(input == ""){
+			cout << loginName << '@' << hostName << this->prompt << " ";
+			getline(cin, input);
+			noComments =  this->throwAwayComments(input);
+			input = noComments;
+			if(bugSearch(input)){
+				cout << "Bug found in input" << endl;
+				input = "";
+			}
+		}
 		
-		getline(cin, input);
 		
-		string noComments = this->throwAwayComments(input);
-		cout << noComments << endl;
+	    
 	    //Separat string into its induvidual parts and compare boolean values
 	    
 	    //Separate string by ; first
 		char_separator<char> separatorSemiColon(";");
 		tokenizer<char_separator<char> > tok(noComments, separatorSemiColon);
 		for(tokenizer<char_separator<char> >::iterator beg1=tok.begin(); beg1!=tok.end();++beg1){
-			
+		
 			//Separate strings by || first do to presidance
 			char_separator<char> separatorAnd("&&");
 			tokenizer<char_separator<char> > tok(*beg1, separatorAnd);
@@ -122,17 +191,23 @@ void Terminal::run(){
 				tokenizer<char_separator<char> > tok(*beg2, separatorAnd);
 				
 				for(tokenizer<char_separator<char> >::iterator beg3=tok.begin(); beg3!=tok.end();++beg3){
-					
+				
 					//If the result of the exe function is zero it means
 					//that the function executed correctly 0 errors
 					if(lastOperation == 0 && result == 0){
 						result = (this->exe(*beg3) == 0);
+						if(!result){
+							cout << "Error executing: " << *beg3 << endl;
+						}
 					}
 					else if(lastOperation == 1 && result == 1){
 						result = (this->exe(*beg3) == 0);
+						if(!result){
+							cout << "Error executing: " << *beg3 << endl;
+						}
 					}
 					lastOperation = 0;
-				}
+			}
 				lastOperation = 1;
 			}
 	 	}
