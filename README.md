@@ -27,6 +27,7 @@ WARNING!! Please keep in mind that the first two connectors have to be typed in 
 
 ## Latest additions/changes
 -Added the test command functionality (which returns true or false)
+
 -Revised the operator precedence
 
 ## Design
