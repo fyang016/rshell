@@ -145,6 +145,132 @@ int Terminal::bugSearch(string str){
 	return 0;
 }
 
+vector<string> Terminal::vectorizeParentheses(string str){
+	//tested for : (echo A || echo B && echo C) && echo D && echo e
+	int check_for_operation = 0;
+	vector<string> list;
+	char_separator<char> separatorSemiColon("()","()",boost::keep_empty_tokens);
+	tokenizer<char_separator<char> > tok(str, separatorSemiColon);
+	for(tokenizer<char_separator<char> >::iterator beg=tok.begin(); beg!=tok.end();++beg){
+			//If we find a parenthesis set up check_for_operation to one
+			//so that the next loop around we check to see if we have an 
+			//operation
+			if(*beg == "(" || *beg == ")" && check_for_operation == 0){
+				check_for_operation = 1;
+				list.push_back(*beg);
+			}
+			else if(check_for_operation){
+				check_for_operation = 0;
+				char_separator<char> separatorAmps("","&&",boost::keep_empty_tokens);
+				tokenizer<char_separator<char> > tok2(*beg, separatorAmps);
+				tokenizer<char_separator<char> >::iterator amps=tok2.begin();
+				int count = 0;
+				int stop = 0;
+				string result;
+				for(tokenizer<char_separator<char> >::iterator amps=tok2.begin(); amps!=tok2.end();++amps){
+						
+					cout << "Parendation : " << *amps << endl;
+					if((*amps == " " || *amps == "\0" || *amps == "") && count == 0){
+						amps++;
+						amps++;
+						amps++;
+						cout << "Parendation Comparison found &&" << endl;
+						list.push_back("&&");
+					}
+					else if(count != 0 && stop == 0){
+						result.append(*amps);
+					}
+					else if(stop == 0){
+						result.append(*beg);
+						stop = 1;
+					}
+					count++;
+				}
+				list.push_back(result);
+			
+			}
+			else{
+				check_for_operation = 0;
+				list.push_back(*beg);
+			}
+	}
+	
+	return list;
+}
+
+void Terminal::removeEmpty(vector<string> & v){
+	int len = v.size();
+	for(int i = 0; i < len; i++){
+		if(v[i] == "\0" || v[i] == " " || v[i] == ""){
+			cout << "removed Blanks: " << i  << ":" << v[i]  << ":" << endl;
+			v.erase(v.begin() + i);
+		}
+	}
+}
+
+void Terminal::splicer(string  str){
+		int lastOperation = 0; //zero for OR one for AND
+		int result = 0;
+		int global_result = 0;
+		int parentheses = 0;
+			
+		char_separator<char> separatorSemiColon(";");
+		tokenizer<char_separator<char> > tok(str, separatorSemiColon);
+		for(tokenizer<char_separator<char> >::iterator beg1=tok.begin(); beg1!=tok.end();++beg1){
+			if(*beg1 == "("){
+	    		cout << "Open Parenthesis Found" << endl;
+	    		parentheses++;
+	    		continue;
+	    	}
+	    	else if (*beg1 == ")"){
+	    		cout << "Close Parenthesis Found" << endl;
+	    		parentheses--;
+	    		global_result = result;
+	    		cout << "Comarisons: " << global_result << endl;
+	    		continue;
+	    	}
+    	
+			//Separate strings by || first do to presidance
+			char_separator<char> separatorAnd("&&");
+			tokenizer<char_separator<char> > tok(*beg1, separatorAnd);
+			for(tokenizer<char_separator<char> >::iterator beg2=tok.begin(); beg2!=tok.end();++beg2){
+				//cout << "Executing: " << *beg2 << endl;
+				//cout << "Results:" << endl;
+				
+				//Separate Strings by && and execute the commands
+				char_separator<char> separatorOr("||");
+				tokenizer<char_separator<char> > tok(*beg2, separatorOr);
+				for(tokenizer<char_separator<char> >::iterator beg3=tok.begin(); beg3!=tok.end();++beg3){
+					//cout << "lastOperation: " << lastOperation << endl;
+					//cout << "result: " << result << endl;
+					
+					if(*beg3 == " " || *beg3 == "\0"){
+						result = global_result;
+						continue;
+					}
+				
+					//If the result of the exe function is zero it means
+					//that the function executed correctly 0 errors
+					if(lastOperation == 0 && result == 0){
+						result = (this->exe(*beg3) == 0);
+						if(!result){
+							cout << "Error executing: " << *beg3 << endl;
+						}
+					}
+					else if(lastOperation == 1 && result == 1){
+						result = (this->exe(*beg3) == 0);
+						if(!result){
+							cout << "Error executing: " << *beg3 << endl;
+						}
+					}
+					lastOperation = 0; // OR operation ||
+				}
+				lastOperation = 1; // AND operation &&
+			}
+	 	}
+		
+}
+
 //Run the terminal application
 void Terminal::run(){
 	int exit = 0;
@@ -173,57 +299,24 @@ void Terminal::run(){
 		
 	    
 	    //Separat string into its induvidual parts and compare boolean values
-	    
+		vector<string> list;
+		list = vectorizeParentheses(noComments);
+		for(int i = 0; i < list.size(); i++){
+			cout << "Values: " << list[i] << endl;
+		}
+		removeEmpty(list);
+		for(int i = 0; i < list.size(); i++){
+			cout << "Values: " << list[i] << endl;
+		}
+	
 	    //Separate string by ; first
-    
-		int lastOperation = 0; //zero for OR one for AND
-		int result = 0;
-			
-		char_separator<char> separatorSemiColon(";");
-		tokenizer<char_separator<char> > tok(noComments, separatorSemiColon);
-		for(tokenizer<char_separator<char> >::iterator beg1=tok.begin(); beg1!=tok.end();++beg1){
-			if(*beg1 == "("){
-	    		cout << "Open Parenthesis Found" << endl;
-	    		continue;
+	    int len = list.size();
+	    for(int i = 0; i < len; i++){
+	    	if(list[i] != "(" && list[i] != ")"){
+	    		cout << "Execute: " << list[i] << endl;
+    			splicer(list[i]);
 	    	}
-	    	else if (*beg1 == ")"){
-	    		cout << "Close Parenthesis Found" << endl;
-	    		continue;
-	    	}
-    	
-			//Separate strings by || first do to presidance
-			char_separator<char> separatorAnd("&&");
-			tokenizer<char_separator<char> > tok(*beg1, separatorAnd);
-			for(tokenizer<char_separator<char> >::iterator beg2=tok.begin(); beg2!=tok.end();++beg2){
-				
-				// cout << "Executing: " << *beg2 << endl;
-				// cout << "Results:" << endl;
-				
-				//Separate Strings by && and execute the commands
-				char_separator<char> separatorAnd("||");
-				tokenizer<char_separator<char> > tok(*beg2, separatorAnd);
-				for(tokenizer<char_separator<char> >::iterator beg3=tok.begin(); beg3!=tok.end();++beg3){
-				
-					//If the result of the exe function is zero it means
-					//that the function executed correctly 0 errors
-					if(lastOperation == 0 && result == 0){
-						result = (this->exe(*beg3) == 0);
-						if(!result){
-							cout << "Error executing: " << *beg3 << endl;
-						}
-					}
-					else if(lastOperation == 1 && result == 1){
-						result = (this->exe(*beg3) == 0);
-						if(!result){
-							cout << "Error executing: " << *beg3 << endl;
-						}
-					}
-					lastOperation = 0;
-				}
-				lastOperation = 1;
-			}
-	 	}
-		
+	    }
 	}	
 }
 

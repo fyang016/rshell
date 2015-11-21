@@ -16,6 +16,9 @@ class Terminal{
 		int exe(std::string);
 		int bugSearch(string);
 		void printValues();
+		void splicer(string str);
+		vector<string> vectorizeParentheses(string str);
+		void removeEmpty(vector<string> &v);
 		Terminal();
 
 	private:
