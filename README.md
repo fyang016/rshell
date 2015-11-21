@@ -1,6 +1,10 @@
 # rshell
 This project is created by Marco Rubio (mrubi005) and Franklin Yang (fyang016) for CS100.
 
+## Latest additions/changes
+-Added the test command functionality (which returns true or false)
+-Revised the operator precedence
+
 ## What is rshell?
 Hello!
 Rshell is a basic command shell. We are making our own version of bash (Bourne Again SHell) to better understand how the real thing works and to improve software construction skills.
@@ -27,7 +31,7 @@ WARNING!! Please keep in mind that the first two connectors have to be typed in 
 
 
 ### Known bugs
-Code will not throw an error with more than two of the '&' and the '|' characters in a row. (e.g. "&&&&&")
+
 
 ### Important info
 The following command is not perfect:
