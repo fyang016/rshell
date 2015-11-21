@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <typeinfo>
+#include "stat.cpp"
 
 
 using namespace std;
@@ -76,12 +77,20 @@ int Terminal::exe(string command){
 	pid_t c_pid, pid;
 	int status;
 	c_pid = fork();
+	
 	if(c_pid < 0){
 		perror("ERROR: Fork Failed");
 		exit(1);
 		return -1;
 	}
 	else if(c_pid==0){
+		if(args[0][0] == 't' && args[0][1] == 'e' && args[0][2] == 's' && args[0][3] == 't' ){
+			exit(testWordHelper(command));
+		}
+		else if(args[0][0] == '['){
+			exit(testBracketHelper(command));
+		}
+		
 		execvp(args[0], args);
 		perror("execvp failed");
 		delete args;
@@ -147,7 +156,7 @@ int Terminal::bugSearch(string str){
 
 vector<string> Terminal::vectorizeParentheses(string str){
 	//tested for : (echo A || echo B && echo C) && echo D && echo e
-	int check_for_operation = 0;
+	int check_for_operation_behind = 0;
 	vector<string> list;
 	char_separator<char> separatorSemiColon("()","()",boost::keep_empty_tokens);
 	tokenizer<char_separator<char> > tok(str, separatorSemiColon);
@@ -155,12 +164,12 @@ vector<string> Terminal::vectorizeParentheses(string str){
 			//If we find a parenthesis set up check_for_operation to one
 			//so that the next loop around we check to see if we have an 
 			//operation
-			if(*beg == "(" || *beg == ")" && check_for_operation == 0){
-				check_for_operation = 1;
+			if(*beg == "(" || *beg == ")" && check_for_operation_behind == 0){
+				check_for_operation_behind = 1;
 				list.push_back(*beg);
 			}
-			else if(check_for_operation){
-				check_for_operation = 0;
+			else if(check_for_operation_behind){
+				check_for_operation_behind = 0;
 				char_separator<char> separatorAmps("","&&",boost::keep_empty_tokens);
 				tokenizer<char_separator<char> > tok2(*beg, separatorAmps);
 				tokenizer<char_separator<char> >::iterator amps=tok2.begin();
@@ -186,11 +195,39 @@ vector<string> Terminal::vectorizeParentheses(string str){
 					}
 					count++;
 				}
+				
+				check_for_operation_behind = 0;
+				char_separator<char> separatorOr("","||",boost::keep_empty_tokens);
+				tokenizer<char_separator<char> > tok3(*beg, separatorAmps);
+				tokenizer<char_separator<char> >::iterator ors=tok3.begin();
+				count = 0;
+				stop = 0;
+				result = "";
+				for(tokenizer<char_separator<char> >::iterator ors=tok3.begin(); ors!=tok3.end();++ors){
+						
+					cout << "Parendation : " << *ors << endl;
+					if((*ors == " " || *ors == "\0" || *ors == "") && count == 0){
+						ors++;
+						ors++;
+						ors++;
+						cout << "Parendation Comparison found ||" << endl;
+						list.push_back("||");
+					}
+					else if(count != 0 && stop == 0){
+						result.append(*ors);
+					}
+					else if(stop == 0){
+						result.append(*beg);
+						stop = 1;
+					}
+					count++;
+				}
+				
 				list.push_back(result);
 			
 			}
 			else{
-				check_for_operation = 0;
+				check_for_operation_behind = 0;
 				list.push_back(*beg);
 			}
 	}
@@ -254,13 +291,13 @@ void Terminal::splicer(string  str){
 					if(lastOperation == 0 && result == 0){
 						result = (this->exe(*beg3) == 0);
 						if(!result){
-							cout << "Error executing: " << *beg3 << endl;
+							//cout << "Error executing: " << *beg3 << endl;
 						}
 					}
 					else if(lastOperation == 1 && result == 1){
 						result = (this->exe(*beg3) == 0);
 						if(!result){
-							cout << "Error executing: " << *beg3 << endl;
+							//cout << "Error executing: " << *beg3 << endl;
 						}
 					}
 					lastOperation = 0; // OR operation ||
