@@ -1,42 +1,43 @@
-Script started on Fri 06 Nov 2015 10:19:34 PM PST
-[fyang016@hammer assn1]$ make
-rm -rf bin
-mkdir -p bin
-g++ -Wall -Werror -ansi -pedantic ./src/rshell.cpp ./src/terminal.cpp -o ./bin/rshell
-[fyang016@hammer assn1]$ bin/rshell
-fyang016@hammer.cs.ucr.edu$ ls || date
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-fyang016@hammer.cs.ucr.edu$ ls && date
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-Fri Nov  6 22:19:57 PST 2015
-fyang016@hammer.cs.ucr.edu$ ls || date || echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-fyang016@hammer.cs.ucr.edu$ ls && date && echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-Fri Nov  6 22:20:15 PST 2015
-hello
-fyang016@hammer.cs.ucr.edu$ ls && date || echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-Fri Nov  6 22:20:20 PST 2015
-fyang016@hammer.cs.ucr.edu$ ls || date && echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-hello
-fyang016@hammer.cs.ucr.edu$ ls || date; echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-hello
-fyang016@hammer.cs.ucr.edu$ ls; date && echo hello
-bin			  exit.script  multi_command.script	     src
-commented_command.script  Makefile     new_commented_command.script  tests
-Fri Nov  6 22:20:57 PST 2015
-hello
-fyang016@hammer.cs.ucr.edu$ exit
-[fyang016@hammer assn1]$ exit
+Script started on Sun 22 Nov 2015 07:59:53 PM PST
+[fyang016@hammer assn2]$ ./bin/rshell
+$ (echo A) && echo B
+A
+B
+$ echo A && (echo B)
+A
+B
+$ (echo A) || echo B
+A
+B
+$ echo A || (echo B)
+A
+B
+$ (echo A || echo B || echo C) && echo D
+A
+D
+$ echo A || (echo B || echo C && echo D)
+A
+B
+D
+$ echo A && echo B || echo C && echo D
+A
+B
+D
+$ (echo A && echo B) || (echo C && echo D)
+A
+B
+C
+D
+$ (echo A && echo B)
+A
+B
+$ ((echo A && echo B) || (echo C && echo D) && (echo E && echo F))
+A
+B
+C
+D
+$ exit
+[fyang016@hammer assn2]$ exit
 exit
 
+Script done on Sun 22 Nov 2015 08:02:38 PM PST
