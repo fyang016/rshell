@@ -51,7 +51,7 @@ bool testBracketHelper(string input)
 	int sBracketCount = 0;
 	int fBracketCount = 0;
 	
-	int i = 0;
+	unsigned int i = 0;
 	
 	// Debug
 	// cout << input << endl;
@@ -131,7 +131,7 @@ bool testBracketHelper(string input)
     commandString.push_back("");
     int j = 0;
     
-    for (int k = 0; k < input.size(); ++k)
+    for (unsigned int k = 0; k < input.size(); ++k)
     {
     	if (input.at(k) != ' ')
     	{
@@ -317,7 +317,7 @@ bool testWordHelper(string input)
     commandString.push_back("");
     int j = 0;
     
-    for (int i = 0; i < input.size(); ++i)
+    for (unsigned int i = 0; i < input.size(); ++i)
     {
     	if (input.at(i) != ' ')
     	{
