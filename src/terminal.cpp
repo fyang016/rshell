@@ -164,7 +164,7 @@ vector<string> Terminal::vectorizeParentheses(string str){
 			//If we find a parenthesis set up check_for_operation to one
 			//so that the next loop around we check to see if we have an 
 			//operation
-			if(*beg == "(" || *beg == ")" && check_for_operation_behind == 0){
+			if((*beg == "(" || *beg == ")") && check_for_operation_behind == 0){
 				check_for_operation_behind = 1;
 				list.push_back(*beg);
 			}
@@ -346,12 +346,12 @@ void Terminal::run(){
 	    //Separat string into its induvidual parts and compare boolean values
 		vector<string> list;
 		list = vectorizeParentheses(noComments);
-		for(int i = 0; i < list.size(); i++){
+		for(unsigned int i = 0; i < list.size(); i++){
 			// debug
 			// cout << "Values: " << list[i] << endl;
 		}
 		removeEmpty(list);
-		for(int i = 0; i < list.size(); i++){
+		for(unsigned int i = 0; i < list.size(); i++){
 			// debug
 			// cout << "Values: " << list[i] << endl;
 		}
