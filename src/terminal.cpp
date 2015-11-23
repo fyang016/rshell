@@ -177,13 +177,15 @@ vector<string> Terminal::vectorizeParentheses(string str){
 				int stop = 0;
 				string result;
 				for(tokenizer<char_separator<char> >::iterator amps=tok2.begin(); amps!=tok2.end();++amps){
-						
-					cout << "Parendation : " << *amps << endl;
+					
+					// debug
+					// cout << "Parendation : " << *amps << endl;
 					if((*amps == " " || *amps == "\0" || *amps == "") && count == 0){
 						amps++;
 						amps++;
 						amps++;
-						cout << "Parendation Comparison found &&" << endl;
+						// debug
+						// cout << "Parendation Comparison found &&" << endl;
 						list.push_back("&&");
 					}
 					else if(count != 0 && stop == 0){
@@ -204,13 +206,15 @@ vector<string> Terminal::vectorizeParentheses(string str){
 				stop = 0;
 				result = "";
 				for(tokenizer<char_separator<char> >::iterator ors=tok3.begin(); ors!=tok3.end();++ors){
-						
-					cout << "Parendation : " << *ors << endl;
+					
+					// debug	
+					// cout << "Parendation : " << *ors << endl;
 					if((*ors == " " || *ors == "\0" || *ors == "") && count == 0){
 						ors++;
 						ors++;
 						ors++;
-						cout << "Parendation Comparison found ||" << endl;
+						// debug
+						// cout << "Parendation Comparison found ||" << endl;
 						list.push_back("||");
 					}
 					else if(count != 0 && stop == 0){
@@ -239,7 +243,8 @@ void Terminal::removeEmpty(vector<string> & v){
 	int len = v.size();
 	for(int i = 0; i < len; i++){
 		if(v[i] == "\0" || v[i] == " " || v[i] == ""){
-			cout << "removed Blanks: " << i  << ":" << v[i]  << ":" << endl;
+			// debug
+			// cout << "removed Blanks: " << i  << ":" << v[i]  << ":" << endl;
 			v.erase(v.begin() + i);
 		}
 	}
@@ -255,15 +260,18 @@ void Terminal::splicer(string  str){
 		tokenizer<char_separator<char> > tok(str, separatorSemiColon);
 		for(tokenizer<char_separator<char> >::iterator beg1=tok.begin(); beg1!=tok.end();++beg1){
 			if(*beg1 == "("){
-	    		cout << "Open Parenthesis Found" << endl;
+				// debug
+	    		// cout << "Open Parenthesis Found" << endl;
 	    		parentheses++;
 	    		continue;
 	    	}
 	    	else if (*beg1 == ")"){
-	    		cout << "Close Parenthesis Found" << endl;
+	    		// debug
+	    		// cout << "Close Parenthesis Found" << endl;
 	    		parentheses--;
 	    		global_result = result;
-	    		cout << "Comarisons: " << global_result << endl;
+	    		// debug
+	    		// cout << "Comarisons: " << global_result << endl;
 	    		continue;
 	    	}
     	
@@ -339,18 +347,21 @@ void Terminal::run(){
 		vector<string> list;
 		list = vectorizeParentheses(noComments);
 		for(int i = 0; i < list.size(); i++){
-			cout << "Values: " << list[i] << endl;
+			// debug
+			// cout << "Values: " << list[i] << endl;
 		}
 		removeEmpty(list);
 		for(int i = 0; i < list.size(); i++){
-			cout << "Values: " << list[i] << endl;
+			// debug
+			// cout << "Values: " << list[i] << endl;
 		}
 	
 	    //Separate string by ; first
 	    int len = list.size();
 	    for(int i = 0; i < len; i++){
 	    	if(list[i] != "(" && list[i] != ")"){
-	    		cout << "Execute: " << list[i] << endl;
+	    		// debug
+	    		// cout << "Execute: " << list[i] << endl;
     			splicer(list[i]);
 	    	}
 	    }
@@ -359,6 +370,7 @@ void Terminal::run(){
 
 void Terminal::printValues(){
 	for (unsigned int i = 0; i < values.size(); i++){
-		cout << "Value " << i << ": " << *values[i] << endl;
+		// debug
+		// cout << "Value " << i << ": " << *values[i] << endl;
 	}
 }

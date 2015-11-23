@@ -11,8 +11,11 @@ Rshell is designed to mimic bash (mentioned earlier) using C++ code. When run, t
 For example, typing in "ls" and then pressing Enter should display a list of all the files and folders in the current directory.
 Commands can also be chained or ignored using connectors. 
 There are three connectors:
+
 ||
+
 &&
+
 ;
 
 To illustrate the following examples, we will assume that the capital letters A and B are commands (although that isn't the case in actuality).
@@ -28,14 +31,17 @@ WARNING!! Please keep in mind that the first two connectors have to be typed in 
 ## Latest additions/changes
 -Added the test command functionality (which returns true or false)
 
--Revised the operator precedence
+-Revised the operator precedence so that it does not always strictly go from left to right
 
 ## Design
-Our program is designed to mimic bash as closely as we can. In general, the program does well what it is meant to do, because we went through a lot of test cases to get the program to what it is as of now. However, there are parts of the code that can be made more efficient. For example, the code that makes sure that the "test" command runs smoothly lacks clarity because of the many test cases.
-
+Our program is designed to mimic bash as closely as we can. 
+Implementing precedence AND parentheses AND the test command proved to be a challenge for us. The idea is to separate 
+the operators, parentheses symbols, and commands to efficiently organize everything and then to implement precedence on
+the organized information. In theory, it might sound simple enough, but there are so many ways to mess up a part that could
+haunt us for a long time. 
 
 ### Known bugs
-As of now, there are no known bugs that have not been fixed yet.
+-Precedence bug with parentheses group at the rightmost side (e.g. "echo A && (echo 3)")
 
 ### Important info
 The following command is not perfect:

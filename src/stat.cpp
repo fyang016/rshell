@@ -210,13 +210,15 @@ bool testBracketHelper(string input)
     	{
     		if (fileExists(name.c_str()) || directoryExists(name.c_str()))
     		{
-    			cout << "The file/directory " << name << " exists!" << endl;
+    			// debug
+    			// cout << "The file/directory " << name << " exists!" << endl;
     			return 0;
     		}
     		else
     		{
-    			cout << "The file/directory " << name << " does not exist."
-    				<< endl;
+    			// debug
+    			// cout << "The file/directory " << name << " does not exist."
+    			// 	<< endl;
     			return 1;
     		}
     	}
@@ -225,12 +227,14 @@ bool testBracketHelper(string input)
     	{
     		if (fileExists(name.c_str()))
     		{
-    			cout << "The file " << name << " exists!" << endl;
+    			// debug
+    			// cout << "The file " << name << " exists!" << endl;
     			return 0;
     		}
     		else
     		{
-    			cout << "The file " << name << " does not exist." << endl;
+    			// debug
+    			// cout << "The file " << name << " does not exist." << endl;
     			return 1;
     		}
     	}
@@ -239,12 +243,14 @@ bool testBracketHelper(string input)
     	{
     		if (directoryExists(name.c_str()))
     		{
-    			cout << "The directory " << name << " exists!" << endl;
+    			// debug
+    			// cout << "The directory " << name << " exists!" << endl;
     			return 0;
     		}
     		else
     		{
-    			cout << "The directory " << name << " does not exist." << endl;
+    			// debug
+    			// cout << "The directory " << name << " does not exist." << endl;
     			return 1;
     		}
     	}
@@ -259,13 +265,15 @@ bool testBracketHelper(string input)
 		name = commandString.at(0);
 		if (fileExists(name.c_str()) || directoryExists(name.c_str()))
 		{
-			cout << "The file/directory " << name << " exists!" << endl;
+			// debug
+			// cout << "The file/directory " << name << " exists!" << endl;
 			return 0;
 		}
 		else
 		{
-			cout << "The file/directory " << name << " does not exist."
-				<< endl;
+			// debug
+			// cout << "The file/directory " << name << " does not exist."
+			// 	<< endl;
 			return 1;
 		}
 	}
@@ -277,8 +285,8 @@ bool testBracketHelper(string input)
 	
 	
 	
-	
-	cout << input << endl;
+	// debug
+	// cout << input << endl;
 	return 1;
 }
 
@@ -370,12 +378,14 @@ bool testWordHelper(string input)
     	{
     		if (directoryExists(name.c_str()))
     		{
-    			cout << "The directory " << name << " exists!" << endl;
+    			// debug
+    			// cout << "The directory " << name << " exists!" << endl;
     			return 0;
     		}
     		else
     		{
-    			cout << "The directory " << name << " does not exist." << endl;
+    			// debug
+    			// cout << "The directory " << name << " does not exist." << endl;
     			return 1;
     		}
     	}
@@ -390,13 +400,15 @@ bool testWordHelper(string input)
 		name = commandString.at(1);
 		if (fileExists(name.c_str()) || directoryExists(name.c_str()))
 		{
-			cout << "The file/directory " << name << " exists!" << endl;
+			// debug
+			// cout << "The file/directory " << name << " exists!" << endl;
 			return 0;
 		}
 		else
 		{
-			cout << "The file/directory " << name << " does not exist."
-				<< endl;
+			// debug
+			// cout << "The file/directory " << name << " does not exist."
+			// 	<< endl;
 			return 1;
 		}
 	}

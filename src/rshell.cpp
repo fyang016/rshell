@@ -15,7 +15,8 @@ using namespace std;
 int main(int argc, char *argv[]){
 	Terminal terminal;
 	terminal.run();
-	cout << "Done" << endl;
+	// debug
+	// cout << "Done" << endl;
 
 	return 0;
 }
