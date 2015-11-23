@@ -1,0 +1,40 @@
+Script started on Sun 22 Nov 2015 05:45:59 PM PST
+[fyang016@hammer assn2]$ ./bin/rshell
+$ test Makefile
+$ test Makefile && echo A
+A
+$ test asdf && echo A
+$ test -e Makefile && echo A
+A
+$ test -e asdf && echo A
+$ test -f Makefile && echo A
+A
+$ test -f asdf && echo A
+$ test -d src && echo A
+A
+$ test -d asdf && echo A
+$ [ asdf ] && echo A
+$ [ Makefile ] && echo A
+A
+$ [ -e asdf ] && echo A
+$ [ -e Makefile ] && echo A
+A
+$ [ -f asdf ] && echo A
+$ [ -f Makefile ] && echo A
+A
+$ [ -d src ] && echo A
+A
+$ [ -d asdf ] && echo A
+$ [ -e Makefile ] && echo A && echo B
+A
+B
+$ [ -e Makefile ] || echo A && echo B
+B
+$ ( [ -e Makefile ] && echo A ) && echo B
+A
+B
+$ exit
+[fyang016@hammer assn2]$ exit
+exit
+
+Script done on Sun 22 Nov 2015 05:50:49 PM PST

@@ -1,0 +1,43 @@
+Script started on Sun 22 Nov 2015 07:59:53 PM PST
+[fyang016@hammer assn2]$ ./bin/rshell
+$ (echo A) && echo B
+A
+B
+$ echo A && (echo B)
+A
+B
+$ (echo A) || echo B
+A
+B
+$ echo A || (echo B)
+A
+B
+$ (echo A || echo B || echo C) && echo D
+A
+D
+$ echo A || (echo B || echo C && echo D)
+A
+B
+D
+$ echo A && echo B || echo C && echo D
+A
+B
+D
+$ (echo A && echo B) || (echo C && echo D)
+A
+B
+C
+D
+$ (echo A && echo B)
+A
+B
+$ ((echo A && echo B) || (echo C && echo D) && (echo E && echo F))
+A
+B
+C
+D
+$ exit
+[fyang016@hammer assn2]$ exit
+exit
+
+Script done on Sun 22 Nov 2015 08:02:38 PM PST
